@@ -1,40 +1,29 @@
-## QuillCTF: Unlock your web3 security skills
+## Summary
 
-## Why **QuillAudits CTF?**
+The CTF solution uses Brownie and python tests
 
-Quill CTF is a game in which you hack Ethereum smart contracts to learn about security. It's meant to be both fun and educational. The game is designed to educate players on how to identify and fix security issues in Ethereum smart contracts.
+## Installation
 
-The challenges contain several of the most common vulnerabilities found in Ethereum smart contracts today, including reentrancy, integer overflows/underflows, predictable randomness, and more!
+To install Brownie development framework, follow the instructions [here](https://eth-brownie.readthedocs.io/en/stable/install.html)
 
-### QuillCTF Website link: https://bit.ly/QuillCTF
+## Exploits
 
-### How to submit the solution:
-Fill out the below submission form with Vulnerability details and a solution to CTF:   
-[https://quillaudits.typeform.com/QuillCTF](https://quillaudits.typeform.com/QuillCTF)
+#### ConfidentialHash
 
-### QuillAudits CTF community at Discord:
-We have Discord channels for CTFs for users to discuss the challenges and ask questions. This provides a great opportunity for CTF players to learn from each other and share ideas.   
-Join our Discord community by clicking [here](https://discord.com/invite/b7XVMcxD).
+Variables on smart contract can be accessed independently from their modifiers using the “get_storage_at” RPC call
 
-## Challenges:
+#### RoadClosed
 
-| Sl. No.  | Challenge  | Type              | Difficulty | Points  | Solutions |
-|---------|------------|-------------------|------------|---------| ---------|
-| 01.     | [Road Block](/challenges/solidity-security/road-block.sol) | Solidity Security | Easy     | 100      | *Coming Soon* |
-| 02.     | [VIP Bank](/challenges/solidity-security/vipBank.sol) | Solidity Security | Easy     | 100      | *Coming Soon* |
-| 03.     | [Confidential Hash](/challenges/solidity-security/confidentialHash.sol) | Solidity Security | Easy     | 100      | *Coming Soon* |
-| 04.     | [Safe NFT](/challenges/solidity-security/safeNFT.sol) | Solidity Security | Medium     | 200      | *Coming Soon* |
+Lack of access control enable malicious users to change contract owner
 
+#### VipBank
 
----
+Expected an underflow or a reentrancy but check-effects-interaction solution was being used. Only found a bad require condition that would lock funds of all users in the contract.
 
-## About Us:
-QuillAudits is a Leading smart contract audit firm committed to securing Blockchain projects with cutting-edge Web3 security solutions. QuillAudits is well-equipped with tools and expertise to provide cybersecurity solutions saving the loss of millions in funds.
+#### SafeNFT
 
-**🌐  [Website](https://audits.quillhash.com/smart-contract-audit)**   
-**👨‍💻  [Clients & Partners](https://audits.quillhash.com/clients-and-partners)**    
-**✍️  [Blog](https://blog.quillhash.com/)**   
-**📑  [Audit Reports](https://github.com/Quillhash/QuillAudit_Reports)**   
-**📩 [Telegram](https://t.me/quillaudits_official)**     
-**📨 [Twitter](https://twitter.com/QuillAudits)**   
-**🧑‍💻 [Telegram](http://t.me/QuillAudits)**   
+Claim NFT is Vulnerable to reentrancy attack. Indeed, when executing an NFT safeTransfer function the contract will check if the sender implements onERC721Received function so that it is sure the sender knows how to handle NFT. onERC721Received can then be used to claim NFT until gas runs out. Check [smart contract](https://github.com/theexoticman/Quill-CTFs/blob/main/brownie/contracts/nft_hack.sol)
+
+## Run exploits
+
+to run all the exploits located in the [test file](https://github.com/theexoticman/Quill-CTFs/blob/main/brownie/tests/test_hack_script.py) run: `brownie test`
